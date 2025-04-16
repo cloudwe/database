@@ -249,12 +249,12 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await page.locator('#rego').fill('MN178WE')
   await page.getByRole('button', { name: 'Submit' }).click();
 
-
   await expect(page.locator('#results')).toContainText('MN178WE')
   await expect(page.locator('#results')).toContainText('Toyota')
   await expect(page.locator('#results')).toContainText('Corolla')
   await expect(page.locator('#results')).toContainText('Red')
   await expect(page.locator('#results')).toContainText('Rachel Smith')
+  
   await expect(page.locator('#results').locator('div')).toHaveCount(1)
 })
 
