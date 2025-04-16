@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Helper functions
+    // helper functions
     function clearOwnerResults() {
         ownerResults.innerHTML = '';
         messageOwner.textContent = '';

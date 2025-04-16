@@ -11,9 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('people-search-form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const submitButton = e.target.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
-
   const messageEl = document.getElementById('message');
   const resultsEl = document.getElementById('results');
   const template = document.getElementById('result-template');
@@ -23,7 +20,7 @@ document.getElementById('people-search-form').addEventListener('submit', async (
   resultsEl.innerHTML = '';
 
   try {
-      // Get search values (trim whitespace)
+      // whitespace
       const name = document.getElementById('name').value.trim();
       const license = document.getElementById('license').value.trim();
       
@@ -39,9 +36,6 @@ document.getElementById('people-search-form').addEventListener('submit', async (
           messageEl.style.color = 'red';
           return;
       }
-
-         // Add slight delay to ensure UI updates
-        await new Promise(resolve => setTimeout(resolve, 50));
 
       let query = supabase.from('People').select(`
           PersonID, Name, Address, DOB, LicenseNumber, ExpiryDate
@@ -62,7 +56,7 @@ document.getElementById('people-search-form').addEventListener('submit', async (
         data.forEach(person => {
             const clone = template.content.cloneNode(true);
             
-            // 3. Fill in the data using the existing spans
+            // fill in the data using the existing spans
             clone.querySelector('.person-id').textContent = person.PersonID;
             clone.querySelector('.name').textContent = person.Name;
             clone.querySelector('.address').textContent = person.Address;
@@ -70,7 +64,7 @@ document.getElementById('people-search-form').addEventListener('submit', async (
             clone.querySelector('.license-number').textContent = person.LicenseNumber;
             clone.querySelector('.expiry-date').textContent = person.ExpiryDate;
             
-            // 4. Append to results container
+            // append to results container
             document.getElementById('results').appendChild(clone);
         });
     } 
@@ -83,9 +77,6 @@ document.getElementById('people-search-form').addEventListener('submit', async (
         messageEl.textContent = 'Error: ' + err.message;
         messageEl.style.color = 'red';
         console.error("Search error:", err);
-    } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Submit'; // Reset button text
     }
     });
 });
