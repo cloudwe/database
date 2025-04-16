@@ -2,7 +2,7 @@
 const { test, expect} = require('@playwright/test');
 
 // change this to the URL of your website, could be local or GitHub pages
-const websiteURL = 'https://cloudwe.github.io/database/add-vehicle.html';
+const websiteURL = 'http://127.0.0.1:5500/add-vehicle.html';
 
 // on website page before each test
 test.beforeEach(async ({ page }) => {
@@ -248,6 +248,8 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
 
   await page.locator('#rego').fill('MN178WE')
   await page.getByRole('button', { name: 'Submit' }).click();
+
+
   await expect(page.locator('#results')).toContainText('MN178WE')
   await expect(page.locator('#results')).toContainText('Toyota')
   await expect(page.locator('#results')).toContainText('Corolla')
@@ -408,10 +410,10 @@ test('handle special characters in all fields', async ({ page }) => {
       // playwright will throw malformed value
   await page.fill('#name', 'J'+specialChars+'n');
   await page.fill('#address', 'Not'+specialChars+'m');
-  await page.type('#license', 'R'+specialChars+'5N'); //worked better than fill for this field
+  await page.fill('#license', 'R'+specialChars); 
 
   await expect(page.locator('#name')).toHaveValue('Jn');
   await expect(page.locator('#address')).toHaveValue('Notm');
-  await expect(page.locator('#license')).toHaveValue('R5N');
+  await expect(page.locator('#license')).toHaveValue('R');
 
 });

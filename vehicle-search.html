@@ -36,8 +36,20 @@
           <button type="submit" id="submit-btn">Submit</button>
         </form>
         <div id="message"></div>
-        <div id="results"></div>
-      </main>
+        <div id="results">
+          <!-- template -->
+          <template id="vehicle-result-template">
+              <div class="result">
+                  <p><strong class="field-label">Registration Number:</strong> <span class="vehicle-id"></span></p>
+                  <p><strong class="field-label">Make:</strong> <span class="make"></span></p>
+                  <p><strong class="field-label">Model:</strong> <span class="model"></span></p>
+                  <p><strong class="field-label">Colour:</strong> <span class="colour"></span></p>
+                  <p><strong class="field-label">Vehicle Owner:</strong> <span class="owner-name"></span></p>
+                  <p><strong class="field-label">Owner's License Number:</strong> <span class="owner-license"></span></p>
+              </div>
+          </template>
+      </div>
+  </main>
 
       <footer>
         <p>Database Project</p>

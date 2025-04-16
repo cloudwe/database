@@ -46,32 +46,47 @@ document.getElementById('people-search-form').addEventListener('submit', async (
 
       if (error) throw error;
 
-      // Display results
+      // display results
       if (data.length > 0) {
-          messageEl.textContent = 'Search successful';
-          messageEl.style.color = 'green';
-          
-          data.forEach(person => {
-              resultsEl.innerHTML += `
-                  <div class="result">
-                      <p><strong>Person ID:</strong> ${person.PersonID}</p>
-                      <p><strong>Name:</strong> ${person.Name}</p>
-                      <p><strong>Address:</strong> ${person.Address}</p>
-                      <p><strong>DOB:</strong> ${person.DOB}</p>
-                      <p><strong>License Number:</strong> ${person.LicenseNumber}</p>
-                      <p><strong>Expiry Date:</strong> ${person.ExpiryDate}</p>
-                  </div>
-              `;
-          });
-      } else {
-          messageEl.textContent = 'No result found';
-          messageEl.style.color = 'blue';
-      }
+        messageEl.textContent = 'Search successful';
+        messageEl.style.color = 'green';
+        
+        data.forEach(person => {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result';
+            
+            // helper function to create labeled paragraphs
+            const createField = (label, value) => {
+                const p = document.createElement('p');
+                const strong = document.createElement('strong');
+                strong.className = 'field-label';
+                strong.textContent = label;
+                p.append(strong, ` ${value}`);
+                return p;
+            };
+            
+            // add all fields to the result div
+            resultDiv.append(
+                createField('Person ID:', person.PersonID),
+                createField('Name:', person.Name),
+                createField('Address:', person.Address),
+                createField('DOB:', person.DOB),
+                createField('License Number:', person.LicenseNumber),
+                createField('Expiry Date:', person.ExpiryDate)
+            );
+            
+            // append to results container
+            resultsEl.appendChild(resultDiv);
+        });
+    } else {
+        messageEl.textContent = 'No result found';
+        messageEl.style.color = 'blue';
+    }
 
-  } catch (err) {
-      messageEl.textContent = 'Error: ' + err.message;
-      messageEl.style.color = 'red';
-      console.error("Search error:", err);
-  }
+    } catch (err) {
+        messageEl.textContent = 'Error: ' + err.message;
+        messageEl.style.color = 'red';
+        console.error("Search error:", err);
+    }
+    });
 });
-})

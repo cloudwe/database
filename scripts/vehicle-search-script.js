@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const messageEl = document.getElementById('message');
         const resultsEl = document.getElementById('results');
+        const template = document.getElementById('vehicle-result-template');
+        
         messageEl.textContent = '';
         messageEl.style.color = '';
         resultsEl.innerHTML = '';
@@ -42,21 +44,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 messageEl.style.color = 'green';
                 
                 data.forEach(vehicle => {
-                    resultsEl.innerHTML += `
-                        <div class="result">
-                            <p><strong>Registration:</strong> ${vehicle.VehicleID}</p>
-                            <p><strong>Make:</strong> ${vehicle.Make}</p> 
-                            <p><strong>Model:</strong>${vehicle.Model}</p>
-                            <p><strong>Colour:</strong> ${vehicle.Colour}</p>
-                            <p><strong>Vehicle Owner:</strong> ${vehicle.People?.Name || 'None'}</p>
-                            <p><strong>License Number:</strong> ${vehicle.People?.LicenseNumber || 'N/A'}</p>
-                        </div>
-                    `;
+                    const clone = template.content.cloneNode(true);
+                    
+                    // Populate all fields
+                    clone.querySelector('.vehicle-id').textContent = vehicle.VehicleID;
+                    clone.querySelector('.make').textContent = vehicle.Make;
+                    clone.querySelector('.model').textContent = vehicle.Model;
+                    clone.querySelector('.colour').textContent = vehicle.Colour;
+                    clone.querySelector('.owner-name').textContent = vehicle.People?.Name || 'None';
+                    clone.querySelector('.owner-license').textContent = vehicle.People?.LicenseNumber || 'N/A';
+                    
+                    // Append to results div
+                    resultsEl.appendChild(clone);
                 });
             } else {
                 messageEl.textContent = 'No result found';
                 messageEl.style.color = 'blue';
             }
+
         } catch (err) {
             messageEl.textContent = 'Error: ' + err.message;
             messageEl.style.color = 'red';
