@@ -1,7 +1,7 @@
 // @ts-check
 const { test, expect} = require('@playwright/test');
 
-// URL website
+// change this to the URL of your website, could be local or GitHub pages
 const websiteURL = 'https://cloudwe.github.io/database/add-vehicle.html';
 
 // on website page before each test
@@ -308,19 +308,16 @@ test('correct new owner implementation', async ({ page }) => {
   await page.locator('#name').fill('Kevin Green')
   await page.getByRole('button', { name: 'Submit' }).click();
 
-  const expectedTexts = [
-    'Kevin Green',
-    'Nottingham',
-    '1990-01-01',
-    'SD876ES',
-    '2030-01-01'
-  ];
+  const resultsDiv = page.locator('#results');
 
-  // looping to see if #results contains the expected tests
-  for (const text of expectedTexts) {
-    await expect(page.locator('#results')).toContainText(text);
-  }
+  await expect(resultsDiv).toContainText('Kevin Green');
+  await expect(resultsDiv).toContainText('Nottingham');
+  await expect(resultsDiv).toContainText('1990-01-01');
+  await expect(resultsDiv).toContainText('SD876ES'); 
+  await expect(resultsDiv).toContainText('2030-01-01');
+
   await expect(page.locator('#results').locator('div')).toHaveCount(1) // only one owner
+
 
   //     exception - checking if system accepts a duplicate owner 
       // also checking if this is case sensitive for address and license
@@ -353,9 +350,12 @@ test('correct new owner implementation', async ({ page }) => {
   await page.locator('#license').fill('SD876ES')
   await page.getByRole('button', { name: 'Submit' }).click();
 
-  for (const text of expectedTexts) {
-    await expect(page.locator('#results')).toContainText(text);
-  }
+  await expect(resultsDiv).toContainText('Kevin Green');
+  await expect(resultsDiv).toContainText('Nottingham');
+  await expect(resultsDiv).toContainText('1990-01-01');
+  await expect(resultsDiv).toContainText('SD876ES'); 
+  await expect(resultsDiv).toContainText('2030-01-01');
+
   await expect(page.locator('#results').locator('div')).toHaveCount(1) // only one owner
 
 });
