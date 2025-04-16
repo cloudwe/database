@@ -408,7 +408,7 @@ test('handle special characters in all fields', async ({ page }) => {
       // playwright will throw malformed value
   await page.fill('#name', 'J'+specialChars+'n');
   await page.fill('#address', 'Not'+specialChars+'m');
-  await page.type('#license', 'R'+specialChars+'5N');
+  await page.type('#license', 'R'+specialChars+'5N'); // worked better than fill for this field
 
   await expect(page.locator('#name')).toHaveValue('Jn');
   await expect(page.locator('#address')).toHaveValue('Notm');
