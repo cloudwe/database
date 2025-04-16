@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const rego = document.getElementById('rego').value.trim();
             
-            // Validate input
+            // validate input
             if (!rego) {
                 messageEl.textContent = 'Error: Please enter a registration number';
                 messageEl.style.color = 'red';
