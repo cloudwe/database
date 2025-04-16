@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a Vehicle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Search people and vehicles in the database system">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts/vehicle-add-script.js" defer></script>
+</head>
+
+<body>
+    <div id="container">
+        <header>
+            <h1>Add a Vehicle</h1>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">People search</a></li>
+                    <li><a href="vehicle-search.html">Vehicle search</a></li>
+                    <li><a href="add-vehicle.html">Add a vehicle</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <aside class="sidebar">
+            <img src="images/search-icon.png" alt="Magnifying glass icon">
+        </aside>
+
+        <main>
+            <div class="forms-container">
+                <!-- Vehicle Form -->
+                <form id="add-vehicle-form">
+
+                    <label for="rego">Vehicle Registration:</label>
+                    <input type="text" id="rego" maxlength="15" pattern="[A-Za-z0-9 ]+"  oninput="this.value=this.value.replace(/[^A-Za-z0-9 ]/g,'')">
+                    
+                    <label for="make">Vehicle Make:</label>
+                    <input type="text" id="make" maxlength="70" pattern="[A-Za-z0-9 ]+"  oninput="this.value=this.value.replace(/[^A-Za-z0-9 ]/g,'')">
+                    
+                    <label for="model">Vehicle Model:</label>
+                    <input type="text" id="model" maxlength="100" pattern="[A-Za-z0-9 ]+"  oninput="this.value=this.value.replace(/[^A-Za-z0-9 ]/g,'')">
+                    
+                    <label for="colour">Vehicle Colour:</label>
+                    <input type="text" id="colour" maxlength="50" pattern="[A-Za-z ]+" oninput="this.value=this.value.replace(/[^A-Za-z ]/g,'')" >
+                    
+                    <label for="owner">Owner Name:</label>
+                    <input type="text" id="owner"maxlength="70" pattern="[A-Za-z ]+" oninput="this.value=this.value.replace(/[^A-Za-z ]/g,'')" >
+                    
+                    <div class="button-row">
+                        <button type="button" id="check-owner-btn" disabled>Check owner</button>
+                        <button type="button" id="new-owner-btn" disabled>New owner</button>
+                        <button type="submit" id="add-vehicle-btn">Add vehicle</button>
+                    </div>
+                  
+                </form>
+                
+                <!-- new owner form -->
+                <form id="new-owner-form" style="display: none;">
+                  <h2>Add New Owner</h2>
+
+                  <div class="form-field">
+                    <label for="personid">Person ID:</label>
+                    <input type="text" id="personid" pattern="[0-9]+" oninput="this.value=this.value.replace(/[^0-9]/g,'')" >
+                  </div>
+                  
+                  <!-- form-field -->
+                  <div class="form-field">
+                      <label for="name">Full Name:</label>
+                      <input type="text" id="name" maxlength="70" pattern="[A-Za-z ]+" oninput="this.value=this.value.replace(/[^A-Za-z ]/g,'')" >
+                      
+                  </div>
+                  
+                  <div class="form-field">
+                      <label for="address">Address:</label>
+                      <input type="text" id="address" maxlength="130" pattern="[A-Za-z0-9 ]+"  oninput="this.value=this.value.replace(/[^A-Za-z0-9 ]/g,'')">
+                  </div>
+                  
+                  <div class="form-field">
+                      <label for="dob">Date of Birth:</label>
+                      <input type="date" id="dob" >
+                  </div>
+                  
+                  <div class="form-field">
+                      <label for="license">License Number:</label>
+                      <input type="text" id="license" maxlength="15" pattern="[A-Za-z0-9 ]+"  oninput="this.value=this.value.replace(/[^A-Za-z0-9 ]/g,'')">
+                  </div>
+                  
+                  <div class="form-field">
+                      <label for="expire">License Expiry Date:</label>
+                      <input type="date" id="expire">
+                  </div>
+                  
+                  <button type="button" id="add-owner-btn">Add owner</button>
+                  <div id="message-owner" class="form-message"></div>
+              </form>
+            </div>
+           
+            <div id="owner-results"></div>
+            <div id="message-vehicle" class="form-message"></div>
+        </main>
+
+        <footer>
+            <p>Database Project</p>
+        </footer>
+    </div>
+
+    <template id="owner-card-template">
+        <div class="owner-card">
+          <p><strong>Name:</strong> <span class="owner-name"></span></p>
+          <p><strong>Address:</strong> <span class="owner-address"></span></p>
+          <p><strong>DOB:</strong> <span class="owner-dob"></span></p>
+          <p><strong>License:</strong> <span class="owner-license"></span></p>
+          <p><strong>Expiry:</strong> <span class="owner-expiry"></span></p>
+          <button class="select-owner">Select owner</button>
+        </div>
+      </template>
+</body>
+</html>
