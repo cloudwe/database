@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicle Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Search people and vehicles in the database system">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts/vehicle-search-script.js" defer></script>
+</head>
+
+<body>
+    <div id="container">
+        <header>
+          <h1>Vehicle Search</h1>
+          <nav>
+            <ul class="nav-menu">
+                <li><a href="index.html">People search</a></li>
+                <li><a href="vehicle-search.html">Vehicle search</a></li>
+                <li><a href="add-vehicle.html">Add a vehicle</a></li>
+            </ul>
+        </nav>
+        </header>
+
+        <aside class="sidebar">
+            <!-- image from: https://www.iconexperience.com/g_collection/icons/?icon=magnifying_glass--> 
+            <img src="images/search-icon.png" alt="Magnifying glass icon">
+        </aside>
+
+    <main>
+        <form id="vehicle-search-form">
+          <label for="rego">Search by Registration Number:</label>
+          <input type="text" id="rego" name="rego" maxlength="15"  pattern="[A-Za-z0-9 ]+"  oninput="this.value=this.value.replace(/[^A-Za-z0-9 ]/g,'')" aria-label="Enter vehicle registration">
+          
+          <button type="submit" id="submit-btn">Submit</button>
+        </form>
+        <div id="message"></div>
+        <div id="results"></div>
+      </main>
+
+      <footer>
+        <p>Database Project</p>
+    </footer> 
+    </div>
+  </body>
+</html>
