@@ -2,7 +2,7 @@
 const { test, expect} = require('@playwright/test');
 
 // change this to the URL of your website, could be local or GitHub pages
-const websiteURL = 'http://127.0.0.1:5500/add-vehicle.html';
+const websiteURL = 'https://cloudwe.github.io/database/add-vehicle.html';
 
 // on website page before each test
 test.beforeEach(async ({ page }) => {
