@@ -40,8 +40,21 @@
               <button type="submit" id="submit-btn">Submit</button>
             </form>
             <div id="message"></div>
-            <div id="results"></div>
-          </main>
+              <!-- Template for search results (hidden by default) -->
+              <div id="results">
+                <!-- Template for search results (hidden by default) -->
+                <template id="result-template">
+                    <div class="result">
+                        <p><strong class="field-label">Person ID:</strong> <span class="person-id"></span></p>
+                        <p><strong class="field-label">Name:</strong> <span class="name"></span></p>
+                        <p><strong class="field-label">Address:</strong> <span class="address"></span></p>
+                        <p><strong class="field-label">DOB:</strong> <span class="dob"></span></p>
+                        <p><strong class="field-label">License Number:</strong> <span class="license-number"></span></p>
+                        <p><strong class="field-label">Expiry Date:</strong> <span class="expiry-date"></span></p>
+                    </div>
+                </template>
+            </div>
+        </main>
       
         <footer>
             <p>Database Project</p>
