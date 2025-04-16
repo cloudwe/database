@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('people-search-form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
+  const submitButton = e.target.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+
   const messageEl = document.getElementById('message');
   const resultsEl = document.getElementById('results');
   const template = document.getElementById('result-template');
@@ -36,6 +39,9 @@ document.getElementById('people-search-form').addEventListener('submit', async (
           messageEl.style.color = 'red';
           return;
       }
+
+         // Add slight delay to ensure UI updates
+        await new Promise(resolve => setTimeout(resolve, 50));
 
       let query = supabase.from('People').select(`
           PersonID, Name, Address, DOB, LicenseNumber, ExpiryDate
@@ -77,6 +83,9 @@ document.getElementById('people-search-form').addEventListener('submit', async (
         messageEl.textContent = 'Error: ' + err.message;
         messageEl.style.color = 'red';
         console.error("Search error:", err);
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit'; // Reset button text
     }
     });
 });

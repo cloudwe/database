@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // enable Check Owner button when owner field has content
     document.getElementById('owner').addEventListener('input', function() {
         checkOwnerBtn.disabled = this.value.trim() === '';
-        newOwnerBtn.disabled = true; // Reset new owner button state
+        newOwnerBtn.disabled = true;// Reset new owner button state
     });
 
     // check Owner button click handler
