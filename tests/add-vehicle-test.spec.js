@@ -245,6 +245,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
 
   // verifying that the vehicle was sucessfully added
   await page.getByRole('link', { name: 'Vehicle search' }).click()
+  await page.waitForTimeout(1000); // IMPORTANT TO LET THE PAGE LOAD!!! at least wait a second
 
   await page.locator('#rego').fill('MN178WE')
   await page.getByRole('button', { name: 'Submit' }).click();
@@ -303,6 +304,7 @@ test('correct new owner implementation', async ({ page }) => {
   await expect(message).toContainText('Owner added successfully');
 
   await page.getByRole('link', { name: 'People search' }).click()
+  await page.waitForTimeout(1000);
 
   //corect people search id
   await page.locator('#name').fill('Kevin Green')
@@ -322,6 +324,7 @@ test('correct new owner implementation', async ({ page }) => {
   //     exception - checking if system accepts a duplicate owner 
       // also checking if this is case sensitive for address and license
   await page.getByRole('link', { name: 'Add a vehicle' }).click()
+  await page.waitForTimeout(1000);
 
   //checking for duplicate vehicle
   await fillFieldAndExpectDisabled(page, '#rego', 'BC256JK', newOwnerBtn);
@@ -345,7 +348,8 @@ test('correct new owner implementation', async ({ page }) => {
 
     // search people to make sure there are no duplicates of kevin green with the same details!!
   await page.getByRole('link', { name: 'People search' }).click()
-
+  await page.waitForTimeout(1000);
+  
   //checking people search driving license number field is correct
   await page.locator('#license').fill('SD876ES')
   await page.getByRole('button', { name: 'Submit' }).click();
@@ -417,3 +421,4 @@ test('handle special characters in all fields', async ({ page }) => {
   await expect(page.locator('#license')).toHaveValue('R');
 
 });
+

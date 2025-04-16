@@ -80,3 +80,4 @@ document.getElementById('people-search-form').addEventListener('submit', async (
     }
     });
 });
+
