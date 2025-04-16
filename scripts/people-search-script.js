@@ -13,6 +13,8 @@ document.getElementById('people-search-form').addEventListener('submit', async (
 
   const messageEl = document.getElementById('message');
   const resultsEl = document.getElementById('results');
+  const template = document.getElementById('result-template');
+
   messageEl.textContent = '';
   messageEl.style.color = '';
   resultsEl.innerHTML = '';
@@ -52,33 +54,21 @@ document.getElementById('people-search-form').addEventListener('submit', async (
         messageEl.style.color = 'green';
         
         data.forEach(person => {
-            const resultDiv = document.createElement('div');
-            resultDiv.className = 'result';
+            const clone = template.content.cloneNode(true);
             
-            // helper function to create labeled paragraphs
-            const createField = (label, value) => {
-                const p = document.createElement('p');
-                const strong = document.createElement('strong');
-                strong.className = 'field-label';
-                strong.textContent = label;
-                p.append(strong, ` ${value}`);
-                return p;
-            };
+            // 3. Fill in the data using the existing spans
+            clone.querySelector('.person-id').textContent = person.PersonID;
+            clone.querySelector('.name').textContent = person.Name;
+            clone.querySelector('.address').textContent = person.Address;
+            clone.querySelector('.dob').textContent = person.DOB;
+            clone.querySelector('.license-number').textContent = person.LicenseNumber;
+            clone.querySelector('.expiry-date').textContent = person.ExpiryDate;
             
-            // add all fields to the result div
-            resultDiv.append(
-                createField('Person ID:', person.PersonID),
-                createField('Name:', person.Name),
-                createField('Address:', person.Address),
-                createField('DOB:', person.DOB),
-                createField('License Number:', person.LicenseNumber),
-                createField('Expiry Date:', person.ExpiryDate)
-            );
-            
-            // append to results container
-            resultsEl.appendChild(resultDiv);
+            // 4. Append to results container
+            document.getElementById('results').appendChild(clone);
         });
-    } else {
+    } 
+    else {
         messageEl.textContent = 'No result found';
         messageEl.style.color = 'blue';
     }

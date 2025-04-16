@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.forEach(vehicle => {
                     const clone = template.content.cloneNode(true);
                     
-                    // Populate all fields
+                    // populate all fields
                     clone.querySelector('.vehicle-id').textContent = vehicle.VehicleID;
                     clone.querySelector('.make').textContent = vehicle.Make;
                     clone.querySelector('.model').textContent = vehicle.Model;
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     clone.querySelector('.owner-name').textContent = vehicle.People?.Name || 'None';
                     clone.querySelector('.owner-license').textContent = vehicle.People?.LicenseNumber || 'N/A';
                     
-                    // Append to results div
+                    // append to results div
                     resultsEl.appendChild(clone);
                 });
             } else {
