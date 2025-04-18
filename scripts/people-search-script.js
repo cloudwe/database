@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const supabaseUrl = 'https://czthfoqzotfgqeazbnjm.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6dGhmb3F6b3RmZ3FlYXpibmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNDM5MzIsImV4cCI6MjA1OTYxOTkzMn0._e8PMx6NZEGY8dSPQWfrzXpXnOeHPchz463pFt0bTeA';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-  
+    const toggleButton = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
 
 
 // PEOPLE SEARCH 
@@ -15,9 +16,11 @@ document.getElementById('people-search-form').addEventListener('submit', async (
   const resultsEl = document.getElementById('results');
   const template = document.getElementById('result-template');
 
+  
   messageEl.textContent = '';
   messageEl.style.color = '';
   resultsEl.innerHTML = '';
+
 
   try {
       // whitespace
@@ -27,13 +30,11 @@ document.getElementById('people-search-form').addEventListener('submit', async (
       // Validate input
       if (!name && !license) {
           messageEl.textContent = 'Error: Please fill at least one field';
-          messageEl.style.color = 'red';
           return;
       }
       
       if (name && license) {
           messageEl.textContent = 'Error: Please use only one field';
-          messageEl.style.color = 'red';
           return;
       }
 
@@ -51,7 +52,6 @@ document.getElementById('people-search-form').addEventListener('submit', async (
       // display results
       if (data.length > 0) {
         messageEl.textContent = 'Search successful';
-        messageEl.style.color = 'green';
         
         data.forEach(person => {
             const clone = template.content.cloneNode(true);
@@ -70,7 +70,6 @@ document.getElementById('people-search-form').addEventListener('submit', async (
     } 
     else {
         messageEl.textContent = 'No result found';
-        messageEl.style.color = 'blue';
     }
 
     } catch (err) {

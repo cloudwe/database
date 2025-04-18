@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="styles.css">
     <script src="scripts/vehicle-search-script.js" defer></script>
+    <script src="scripts/darkmode.js" defer></script>
 </head>
 
 <body>
@@ -29,6 +30,10 @@
         </aside>
 
     <main>
+      <button id="theme-toggle" aria-label="Toggle dark mode">
+        <span id="theme-icon">🌙 Dark Mode Toggle</span>
+      </button>
+      
         <form id="vehicle-search-form">
           <label for="rego">Search by Registration Number:</label>
           <input type="text" id="rego" name="rego" maxlength="15"  pattern="[A-Za-z0-9 ]+"  oninput="this.value=this.value.replace(/[^A-Za-z0-9 ]/g,'')">

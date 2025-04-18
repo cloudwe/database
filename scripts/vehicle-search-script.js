@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // validate input
             if (!rego) {
                 messageEl.textContent = 'Error: Please enter a registration number';
-                messageEl.style.color = 'red';
                 return;
             }
 
@@ -41,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.length > 0) {
                 messageEl.textContent = 'Search successful';
-                messageEl.style.color = 'green';
                 
                 data.forEach(vehicle => {
                     const clone = template.content.cloneNode(true);
@@ -59,12 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } else {
                 messageEl.textContent = 'No result found';
-                messageEl.style.color = 'blue';
             }
 
         } catch (err) {
             messageEl.textContent = 'Error: ' + err.message;
-            messageEl.style.color = 'red';
             console.error("Vehicle search error:", err);
         }
     });

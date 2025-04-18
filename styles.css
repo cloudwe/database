@@ -1,10 +1,44 @@
+/* light mode */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --primary-color: #4f46e5;
+  --card-bg: #f9fafb;
+  --input-bg: #ffffff;
+  --border-color: #000000;
+  --hover-color:  #f7f7f7;
+
+}
+
+/* dark mode */
+[data-theme="dark"] {
+  --bg-color: #2e2f35;
+  --text-color: #f7fafc;
+  --primary-color: #3b6c8d;
+  --card-bg: #2d3748;
+  --input-bg: #4a5568;
+  --border-color: #ffffff;
+  --main-border-color:  #ffffff;
+  --footer-border-color: #ffffff;
+  --aside-border-color: #ffffff;
+  --header-border-color: #ffffff;
+  --hover-color:#1758b9;
+
+}
+
+/* light mode */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
 /* base style */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     line-height: 1.6;
   }
-
 
 /* grid layout */
 #container {
@@ -21,7 +55,7 @@ body {
 
   header {
       grid-area: header;
-      border: 1px solid black;
+      border: 1px solid var(--border-color);
       padding: 10px;
       margin: 10px;
     }
@@ -32,21 +66,21 @@ body {
     
   aside {
       grid-area: sidebar;
-      border: 1px solid black;
+      border: 1px solid var(--border-color);
       padding: 10px;
       margin: 10px;
     }
 
   main {
       grid-area: main;
-      border: 1px solid black;
+      border: 1px solid var(--border-color);
       padding: 10px;
       margin: 10px;
     }
 
   footer {
       grid-area: footer;
-      border: 1px solid black;
+      border: 1px solid var(--border-color);
       padding: 10px;
       margin: 10px;
       text-align: center;
@@ -71,11 +105,11 @@ body {
     display: block;
     padding: 10px;
     text-decoration: none;
-    color: #333;
+    color: var(--text-color);
   }
   
   .nav-menu a:hover {
-    background-color: #f0f0f0;
+    background-color: var(--hover-color);
     border-radius: 12px;
   }
   
@@ -130,7 +164,7 @@ body {
 }
 
 button:disabled {
-    background-color: #cccccc;
+    background-color: #a8a8a8;
     cursor: not-allowed;
   }
   

@@ -7,7 +7,8 @@
     <meta name="description" content="Search people and vehicles in the database system">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="styles.css">
-    <script src="scripts/people-search-script.js" defer></script>
+    <script src="scripts/people-search-script.js"></script>
+    <script src="scripts/darkmode.js" defer></script>
 </head>
 
 <body>
@@ -30,6 +31,10 @@
         </aside>
       
         <main>
+            <button id="theme-toggle" aria-label="Toggle dark mode">
+                <span id="theme-icon">🌙 Dark Mode Toggle</span>
+              </button>
+
             <form id="people-search-form">
               <label for="name">Search by Driver Name:</label>
               <input type="text" id="name" name="name" maxlength="70" pattern="[A-Za-z ]+" oninput="this.value=this.value.replace(/[^A-Za-z ]/g,'')"  aria-label="Enter driver name">

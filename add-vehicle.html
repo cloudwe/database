@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="styles.css">
     <script src="scripts/vehicle-add-script.js" defer></script>
+    <script src="scripts/darkmode.js" defer></script>
 </head>
 
 <body>
@@ -28,6 +29,10 @@
         </aside>
 
         <main>
+            <button id="theme-toggle" aria-label="Toggle dark mode">
+                <span id="theme-icon">🌙 Dark Mode Toggle</span>
+              </button>
+              
             <div class="forms-container">
                 <!-- Vehicle Form -->
                 <form id="add-vehicle-form">

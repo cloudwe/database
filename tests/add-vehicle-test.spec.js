@@ -2,7 +2,7 @@
 const { test, expect} = require('@playwright/test');
 
 // change this to the URL of your website, could be local or GitHub pages
-const websiteURL = 'https://cloudwe.github.io/database/add-vehicle.html';
+const websiteURL = 'http://127.0.0.1:5500/add-vehicle.html';
 
 // on website page before each test
 test.beforeEach(async ({ page }) => {
@@ -420,5 +420,61 @@ test('handle special characters in all fields', async ({ page }) => {
   await expect(page.locator('#address')).toHaveValue('Notm');
   await expect(page.locator('#license')).toHaveValue('R');
 
+});
+
+test('should toggle between dark and light mode', async ({ page }) => {
+  // locate the theme toggle elements
+  const themeToggle = page.locator('#theme-toggle');
+  const themeIcon = page.locator('#theme-icon');
+  
+  // verify initial state (depends on your default)
+  await expect(themeIcon).toHaveText('🌙 Dark Mode'); // Default light mode
+  
+  // check initial theme attribute
+  const initialTheme = await page.evaluate(() => 
+    document.documentElement.getAttribute('data-theme')
+  );
+  expect(initialTheme).toBeFalsy(); // Should be null/undefined for light mode
+  
+  // click to toggle to dark mode
+  await themeToggle.click();
+  
+  // verify dark mode attributes and icon
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(themeIcon).toHaveText('☀️ Light Mode');
+  
+  // verify localStorage was updated
+  const darkModeStorage = await page.evaluate(() => 
+    localStorage.getItem('theme')
+  );
+  expect(darkModeStorage).toBe('dark');
+  
+  // verify CSS variables changed (example check)
+  const darkBgColor = await page.evaluate(() => 
+    getComputedStyle(document.documentElement)
+      .getPropertyValue('--bg-color').trim()
+  );
+  expect(darkBgColor).toBe('#2e2f35'); // Your dark mode bg color
+  
+  // toggle back to light mode
+  await themeToggle.click();
+  
+  // verify light mode attributes
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'dark');
+  await expect(themeIcon).toHaveText('🌙 Dark Mode');
+  
+  // verify localstorage was updated
+  const lightModeStorage = await page.evaluate(() => 
+    localStorage.getItem('theme')
+  );
+  expect(lightModeStorage).toBe('light');
+});
+
+test('should persist theme preference on page reload', async ({ page }) => {
+
+  await page.locator('#theme-toggle').click();
+  
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('#theme-icon')).toHaveText('☀️ Light Mode');
 });
 
