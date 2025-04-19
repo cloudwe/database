@@ -26,7 +26,7 @@
 
 }
 
-/* light mode */
+/* rest of the css*/
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -208,7 +208,7 @@ button:disabled {
     align-self: flex-start;
 }
   
-  /* === Messages === */
+  /* messages */
   #message, #message-owner, #message-vehicle {
     padding: 10px;
     margin: 10px 0;
@@ -221,7 +221,7 @@ button:disabled {
       height: auto;
     }
   
-  /* responsive design mobile <500px  */
+  /* responsive layout for when width <500px  */
   @media (max-width: 500px) {
     #container {
       display: grid;
@@ -244,7 +244,7 @@ button:disabled {
   
     aside {
       grid-area: aside;
-      min-width: 0; /* Allows shrinking */
+      min-width: 0; 
     }
   
     .nav-menu{

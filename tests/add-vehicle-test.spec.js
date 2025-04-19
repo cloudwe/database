@@ -1,5 +1,6 @@
 // @ts-check
 const { test, expect} = require('@playwright/test');
+const { TIMEOUT } = require('dns');
 
 // change this to the URL of your website, could be local or GitHub pages
 const websiteURL = 'http://127.0.0.1:5500/add-vehicle.html';
@@ -27,9 +28,17 @@ test('navigation structure is correct', async ({ page }) => {
   await expect(navLinks).toHaveCount(3);
 
   // checking link texts
-  await expect(page.getByRole('link', { name: 'People search' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Vehicle search' })).toBeVisible();
+  await page.getByRole('link', { name: 'People search' }).click();
+  await page.waitForTimeout(1000);
+  await expect(page.getByRole('heading', { name: 'People search' })).toBeVisible();
+
+  await page.getByRole('link', { name: 'Vehicle search' }).click();
+  await page.waitForTimeout(1000);
+  await expect(page.getByRole('heading', { name: 'Vehicle search' })).toBeVisible();
+
   await expect(page.getByRole('link', { name: 'Add a vehicle' })).toBeVisible();
+  await page.waitForTimeout(1000);
+  await expect(page.getByRole('heading', { name: 'Vehicle search' })).toBeVisible();
 });
 
 test('navigation uses unordered list', async ({ page }) => {
