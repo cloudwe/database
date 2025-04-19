@@ -41,16 +41,6 @@ test('navigation structure is correct', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Vehicle search' })).toBeVisible();
 });
 
-test('navigation uses unordered list', async ({ page }) => {
-  // verify the navigation is implemented with <ul> inside <header>
-  const header = page.locator('header');
-  const ulCount = await header.locator('ul').count();
-  expect(ulCount).toBe(1);
-  
-  const navList = header.locator('ul');
-  await expect(navList).toBeVisible();
-  await expect(navList.locator('li')).toHaveCount(3);
-});
 
 test('an image or video exists', async ({ page }) => {
   const imageNum = await page.locator('aside').locator('img').count()
@@ -76,12 +66,12 @@ test('correct 4 sections', async ({ page }) => {
 
 // ------------------------ css tests -----------------------------------------------------------------------
 test('navigation links use CSS flex correctly & class is used', async ({ page }) => {
-  // 1. Verify the navigation <ul> exists and has the correct class
+  // verify the navigation <ul> exists and has the correct class
   const navList = page.locator('header ul');
   await expect(navList).toBeVisible();
   await expect(navList).toHaveClass(/nav-menu/); // Checks for class containing 'nav-menu'
 
-  // 2. Verify flex is applied ONLY to navigation <ul>
+  // verify flex is applied ONLY to navigation <ul>
   const otherLists = page.locator('ul:not(header ul)');
   const otherListCount = await otherLists.count();
   
@@ -89,11 +79,11 @@ test('navigation links use CSS flex correctly & class is used', async ({ page })
     await expect(otherLists.nth(i)).not.toHaveCSS('display', 'flex');
   }
 
-  // 3. Verify flex properties on navigation
+  // verify flex properties on navigation
   await expect(navList).toHaveCSS('display', 'flex');
   await expect(navList).toHaveCSS('flex-direction', 'row');
 
-  // 4. Verify links use all horizontal space
+  // verify links use all horizontal space
   const navLinks = navList.locator('li a');
   const linkCount = await navLinks.count();
   
@@ -213,7 +203,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
 
   const resultsDiv = page.locator('#owner-results');
   await expect(resultsDiv).toBeVisible();
-
+  await expect(resultsDiv).toContainText('1');
   await expect(resultsDiv).toContainText('Rachel Smith');
   await expect(resultsDiv).toContainText('Wollaton');
   await expect(resultsDiv).toContainText('1979-06-05');

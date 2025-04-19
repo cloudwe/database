@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         owners.forEach(person => {
             const clone = template.content.cloneNode(true);
-            
+            clone.querySelector('.owner-id').textContent = person.PersonID;
             clone.querySelector('.owner-name').textContent = person.Name;
             clone.querySelector('.owner-address').textContent = person.Address;
             clone.querySelector('.owner-dob').textContent = person.DOB;
