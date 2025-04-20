@@ -163,12 +163,14 @@ test('responsive layout (lists vertically stacked & sidebar moved under main)', 
 
 
 // --------------------------------- javascript tests ------------------------------------------------------
+// helper function - fills out A field and expects an error message when a button is clicked
+  // e.g. fill in vehicle registration field only, click add vehicle button, expect error in #message-vehicle
 async function fillAndCheckError(
   page, 
   fieldId, 
   value, 
-  messageLocator = '#message-owner',
-  buttonName = 'Add owner'
+  messageLocator = '#message-owner', //default value, can change in parameters when calling function
+  buttonName = 'Add owner'//default value, can change in parameters when calling function
 ) {
   const message = page.locator(messageLocator);
   await page.fill(fieldId, value);
@@ -177,30 +179,57 @@ async function fillAndCheckError(
 }
 
 test('correct: text input IDs, check owner & add-vehicle implementation', async ({ page }) => {
-  // make sure check owner button button starts disabled (empty fields)
-  const checkOwnerBtn = page.getByRole('button', { name: 'Check owner', exact: true });
-  await expect(checkOwnerBtn).toBeDisabled();
+// checking disabled buttons/error messages due to empty fields
+  const testCheckOwnerBtn = page.getByRole('button', { name: 'Check owner', exact: true });
+  const addVehicleBtn = page.getByRole('button', { name: 'Add vehicle', exact: true });
+  const testNewOwnerBtn = page.getByRole('button', { name: 'New owner', exact: true });
+  await expect(testCheckOwnerBtn).toBeDisabled();
+  await expect(testNewOwnerBtn).toBeDisabled();
+  await addVehicleBtn.click();
+  await expect(page.locator('#message-vehicle')).toContainText('Error');
 
-  //correct text inputs
-  // fill all required fields & check for 
-  // // the expected error message as form is not complete yet
-  await fillAndCheckError(page, '#rego','MN178WE','#message-vehicle','Add vehicle')
-  await expect(checkOwnerBtn).toBeDisabled(); // making sure after each input the owenr button is disabled
+// filling out vehicle form for existing owner
+  //correct text inputs IDs 
+  // testing correct state of buttons and error message of buttons for vehicle form
+  await fillAndCheckError(page, '#rego','MN178WE','#message-vehicle','Add vehicle') // add vehicle button should return Error
+  await expect(testCheckOwnerBtn).toBeDisabled(); // after each input the check owner button is disabled
+  await expect(testNewOwnerBtn).toBeDisabled(); // after each input the new owner button is disabled
   await fillAndCheckError(page, '#make','Toyota','#message-vehicle','Add vehicle')
-  await expect(checkOwnerBtn).toBeDisabled();
+  await expect(testCheckOwnerBtn).toBeDisabled(); 
+  await expect(testNewOwnerBtn).toBeDisabled();
   await fillAndCheckError(page, '#model','Corolla','#message-vehicle','Add vehicle')
-  await expect(checkOwnerBtn).toBeDisabled();
+  await expect(testCheckOwnerBtn).toBeDisabled(); 
+  await expect(testNewOwnerBtn).toBeDisabled();
   await fillAndCheckError(page, '#colour','Red','#message-vehicle','Add vehicle')
-  await expect(checkOwnerBtn).toBeDisabled();
-
+  await expect(testCheckOwnerBtn).toBeDisabled(); 
+  await expect(testNewOwnerBtn).toBeDisabled();
   // enter incomplete owner name
   await page.fill('#owner', 'rachel');
+  await expect(testCheckOwnerBtn).toBeDisabled(); // check ownber button is disabled, button hasnt been pressed
+  await expect(testNewOwnerBtn).toBeDisabled(); // new owner btn only enabled after check owner!
 
-  // check that the check owner button is enabled
-  await expect(checkOwnerBtn).toBeEnabled();
-  // click check owner button
-  await checkOwnerBtn.click();
+// EXCEPTION!! erase owner name
+  await page.fill('#owner', '');
+  await expect(testCheckOwnerBtn).toBeDisabled(); // check ownber button is disabled
+  await expect(testNewOwnerBtn).toBeDisabled(); // new owner btn only enabled after check owner!
+  await addVehicleBtn.click();
+  await expect(page.locator('#message-vehicle')).toContainText('Error'); // should be an error message, incomplete fields
 
+// fill back the owner field
+  await page.fill('#owner', 'rachel'); 
+  await expect(testCheckOwnerBtn).toBeDisabled(); // check ownber button is enabled
+  await expect(testNewOwnerBtn).toBeDisabled(); // new owner btn only enabled after check owner!
+
+// EXCEPTION! not expecting to add vehicle, there are existing owners with name rachel. 
+      // user yet to decide to select an owner or make new owner
+  await addVehicleBtn.click();
+  await expect(page.locator('#message-vehicle')).not.toContainText('Vehicle Added Successfully'); 
+
+// click check owner button
+  await testCheckOwnerBtn.click();
+  await expect(testNewOwnerBtn).toBeEnabled(); // now new owner button can be enabled as check owner action performed
+
+// expect the correct results in owner-results
   const resultsDiv = page.locator('#owner-results');
   await expect(resultsDiv).toBeVisible();
   await expect(resultsDiv).toContainText('1');
@@ -228,7 +257,6 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   // correct element id and message
   await expect(page.locator('#message-vehicle')).toContainText('Vehicle added successfully');
 
-
   // exception checking 3 items
   //  1. seeing if system prevents duplicate vehicles (same registration field)
     // 2. checking if case sensitive rego affects duplicate vehicles
@@ -242,7 +270,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await page.getByRole('button', { name: 'Add vehicle' }).click();
   await expect(page.locator('#message-vehicle')).toContainText('Error');
 
-  // verifying that the vehicle was sucessfully added
+// verifying that the vehicle was sucessfully added
   await page.getByRole('link', { name: 'Vehicle search' }).click()
   await page.waitForTimeout(1000); // IMPORTANT TO LET THE PAGE LOAD!!! at least wait a second
 
@@ -258,8 +286,8 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await expect(page.locator('#results').locator('div')).toHaveCount(1)
 })
 
-// helper function for filling vehicle field
-  // checks if new owner button is disabled after entering input
+// helper function 
+  // checks if button is disabled after entering input (note: the previous test did this manually)
 async function fillFieldAndExpectDisabled(page, fieldId, value, buttonLocator) {
   await page.fill(fieldId, value);
   await expect(buttonLocator).toBeDisabled();
@@ -269,17 +297,18 @@ async function fillFieldAndExpectDisabled(page, fieldId, value, buttonLocator) {
 test('correct new owner implementation', async ({ page }) => {
   // correct button name, and ensuring it is disabled as fields are empty
   const newOwnerBtn = page.getByRole('button', { name: 'New owner', exact: true });
-  await expect(newOwnerBtn).toBeDisabled();
+  const message = page.locator('#message-owner');
 
-  // fill all required fields with new owner name
+  // fill all required fields with new owner name, ensuring all fields are entered before new owner
+  // button is enabled
     // check that new owner button is disabled even when entering these inputs
+  await expect(newOwnerBtn).toBeDisabled(); // new owner button should be disabled as no fields entered
   await fillFieldAndExpectDisabled(page, '#rego', 'BC256JK', newOwnerBtn);
   await fillFieldAndExpectDisabled(page, '#make', 'Kia', newOwnerBtn);
   await fillFieldAndExpectDisabled(page, '#model', 'Picanto', newOwnerBtn);
   await fillFieldAndExpectDisabled(page, '#colour', 'Red', newOwnerBtn);
   await fillFieldAndExpectDisabled(page, '#owner', 'Kevin Green', newOwnerBtn);
 
-  const message = page.locator('#message-owner');
   await page.getByRole('button', { name: 'Check owner' }).click();
 
   // exception handling: no fields entered
@@ -290,10 +319,10 @@ test('correct new owner implementation', async ({ page }) => {
     // exception - checking once each field entered if error message appears as 
       // fields are still empty
         //adding new owner
-  await fillAndCheckError(page, '#name', 'Kevin Green');
-  await fillAndCheckError(page, '#address', 'Nottingham');
-  await fillAndCheckError(page, '#dob', '1990-01-01');
-  await fillAndCheckError(page, '#license', 'SD876ES');
+  await fillAndCheckError(page, '#name', 'Kevin Green', '#message-owner', 'Add owner');
+  await fillAndCheckError(page, '#address', 'Nottingham', '#message-owner', 'Add owner');
+  await fillAndCheckError(page, '#dob', '1990-01-01', '#message-owner', 'Add owner');
+  await fillAndCheckError(page, '#license', 'SD876ES', '#message-owner', 'Add owner');
   await page.fill('#expire', '2030-01-01'); // this is the last field, no more empty fields.
   // correct button name
   await page.getByRole('button', { name: 'Add owner' }).click();
@@ -320,25 +349,25 @@ test('correct new owner implementation', async ({ page }) => {
   await expect(page.locator('#results').locator('div')).toHaveCount(1) // only one owner
 
 
-  //     exception - checking if system accepts a duplicate owner 
+  // exception - checking if system accepts a duplicate owner 
       // also checking if this is case sensitive for address and license
   await page.getByRole('link', { name: 'Add a vehicle' }).click()
   await page.waitForTimeout(1000);
 
-  //checking for duplicate vehicle
-  await fillFieldAndExpectDisabled(page, '#rego', 'BC256JK', newOwnerBtn);
-  await fillFieldAndExpectDisabled(page, '#make', 'Kia', newOwnerBtn);
-  await fillFieldAndExpectDisabled(page, '#model', 'Picanto', newOwnerBtn);
-  await fillFieldAndExpectDisabled(page, '#colour', 'Red', newOwnerBtn);
-  await fillFieldAndExpectDisabled(page, '#owner', 'Kevin Green', newOwnerBtn);
+  //checking for duplicate vehicle, !!checking that add owner button is not available
+  await page.fill('#rego', 'BC256JK')
+  await page.fill('#make', 'Kia')
+  await page.fill('#model', 'Picanto')
+  await page.fill('#colour', 'Red')
+  await page.fill('#owner', 'Kevin Green')
 
   await page.getByRole('button', { name: 'Check owner' }).click();
   await page.getByRole('button', { name: 'New Owner' }).click();
   
-  await fillAndCheckError(page, '#name', 'Kevin Green');
-  await fillAndCheckError(page, '#address', 'nottingham');
-  await fillAndCheckError(page, '#dob', '1990-01-01');
-  await fillAndCheckError(page, '#license', 'sd876es');
+  await page.fill('#name', 'Kevin Green')
+  await page.fill('#address', 'nottingham')
+  await page.fill('#dob', '1990-01-01')
+  await page.fill('#license', 'sd876es')
   await page.fill('#expire', '2030-01-01'); // this is the last field, no more empty fields.
   // correct button name
   await page.getByRole('button', { name: 'Add owner' }).click();
@@ -362,7 +391,6 @@ test('correct new owner implementation', async ({ page }) => {
   await expect(page.locator('#results').locator('div')).toHaveCount(1) // only one owner
 
 });
-
 test('handle very long inputs in all fields', async ({ page }) => {
   const longString = 'A'.repeat(500); // 500-character string
   
@@ -426,14 +454,14 @@ test('should toggle between dark and light mode', async ({ page }) => {
   const themeToggle = page.locator('#theme-toggle');
   const themeIcon = page.locator('#theme-icon');
   
-  // verify initial state (depends on your default)
-  await expect(themeIcon).toHaveText('🌙 Dark Mode'); // Default light mode
+  // verify initial state 
+  await expect(themeIcon).toHaveText('🌙 Dark Mode'); // default light mode
   
   // check initial theme attribute
   const initialTheme = await page.evaluate(() => 
     document.documentElement.getAttribute('data-theme')
   );
-  expect(initialTheme).toBeFalsy(); // Should be null/undefined for light mode
+  expect(initialTheme).toBeFalsy(); // should be null/undefined for light mode
   
   // click to toggle to dark mode
   await themeToggle.click();
@@ -453,7 +481,7 @@ test('should toggle between dark and light mode', async ({ page }) => {
     getComputedStyle(document.documentElement)
       .getPropertyValue('--bg-color').trim()
   );
-  expect(darkBgColor).toBe('#2e2f35'); // Your dark mode bg color
+  expect(darkBgColor).toBe('#2e2f35'); // dark mode bg color
   
   // toggle back to light mode
   await themeToggle.click();
@@ -476,4 +504,3 @@ test('should persist theme preference on page reload', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(page.locator('#theme-icon')).toHaveText('☀️ Light Mode');
 });
-
