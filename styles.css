@@ -277,13 +277,13 @@ button:disabled {
     outline-offset: 2px;
   }
 
- /* Prevent focus from bubbling up to container */
+ /* prevent focus from bubbling up to container */
 main:focus, 
 form:focus {
   outline: none !important;
 }
 
-/* Keep focus only on inputs/buttons */
+/* keep focus only on inputs/buttons */
 input:focus, 
 button:focus {
   outline: 2px solid #52abff;

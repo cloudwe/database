@@ -223,7 +223,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
 // EXCEPTION! not expecting to add vehicle, there are existing owners with name rachel. 
       // user yet to decide to select an owner or make new owner
   await addVehicleBtn.click();
-  await expect(page.locator('#message-vehicle')).not.toContainText('Vehicle Added Successfully'); 
+  await expect(page.locator('#message-vehicle')).not.toContainText('Vehicle Added Successfully'); //NOT contain text
 
 // click check owner button
   await testCheckOwnerBtn.click();
@@ -269,7 +269,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await page.getByRole('button', { name: 'Add vehicle' }).click();
   await expect(page.locator('#message-vehicle')).toContainText('Error');
 
-// verifying that the vehicle was sucessfully added
+// verifying that the rachel smith's vehicle was sucessfully added
   await page.getByRole('link', { name: 'Vehicle search' }).click()
   await page.waitForTimeout(1000); // IMPORTANT TO LET THE PAGE LOAD!!! at least wait a second
 
@@ -282,7 +282,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await expect(page.locator('#results')).toContainText('Red')
   await expect(page.locator('#results')).toContainText('Rachel Smith')
   
-  await expect(page.locator('#results').locator('div')).toHaveCount(1)
+  await expect(page.locator('#results').locator('div')).toHaveCount(1) //no duplicates
 })
 
 test('vehicle fields & owner fields reject numbers in invalid fields', async ({ page }) => {
@@ -345,7 +345,7 @@ test('correct new owner implementation', async ({ page }) => {
   await fillFieldAndExpectDisabled(page, '#owner', 'Kevin Green', newOwnerBtn);
 
   await page.getByRole('button', { name: 'Check owner' }).click();
-
+  await page.getByRole('button', { name: 'New Owner' }).click();
   // exception handling: no fields entered
   await page.getByRole('button', { name: 'Add owner' }).click();
   await expect(message).toContainText('Error');
@@ -373,7 +373,7 @@ test('correct new owner implementation', async ({ page }) => {
 
   const resultsDiv = page.locator('#results');
 
-  await expect(resultsDiv).toContainText('Kevin Green');
+  await expect(resultsDiv).toContainText('Kevin Green'); 
   await expect(resultsDiv).toContainText('Nottingham');
   await expect(resultsDiv).toContainText('1990-01-01');
   await expect(resultsDiv).toContainText('SD876ES'); 
@@ -381,7 +381,7 @@ test('correct new owner implementation', async ({ page }) => {
 
   await expect(page.locator('#results').locator('div')).toHaveCount(1) // only one owner
 
-  // EXCEPTION - checking if system rejects a duplicate owner with ALL duplicate details
+  // EXCEPTION - checking if system rejects a duplicate owner with  duplicate details
       // also checking if this is case sensitive for address and license
   await page.getByRole('link', { name: 'Add a vehicle' }).click()
   await page.waitForTimeout(1000);
