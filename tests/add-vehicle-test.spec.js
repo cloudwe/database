@@ -245,12 +245,12 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   // checking each card has the button
   await expect(page.locator('.owner-card button:has-text("Select owner")'))
     .toHaveCount(cardCount);
-
-  // clicking the rachel smith one!
-  await page.locator('div.owner-card:has-text("Rachel Smith")').locator('button:has-text("Select owner")').click();
-
-
-
+   
+  // clicking the rachel smith one
+  await page.fill('#owner', 'Rachel Smith'); 
+  await testCheckOwnerBtn.click();
+  await page.waitForTimeout(1000); // IMPORTANT TO LET THE PAGE LOAD!!! at least wait a second
+  await page.getByRole('button', { name: 'Select owner' }).click();
   await page.getByRole('button', { name: 'Add vehicle' }).click();//correct button
 
   // correct element id and message
@@ -411,7 +411,7 @@ test('correct new owner implementation', async ({ page }) => {
   await page.waitForTimeout(1000);
   
   //checking people search driving license number field is correct
-  await page.locator('#license').fill('SD876ES')
+  await page.locator('#license').fill('MK567NT')
   await page.getByRole('button', { name: 'Submit' }).click();
 
   await expect(resultsDiv).toContainText('Kevin Green');
@@ -459,7 +459,7 @@ test('correct new owner implementation', async ({ page }) => {
   await expect(resultsDiv).toContainText('2030-01-01');
 
   await expect(resultsDiv).toContainText('Kevin Green');
-  await expect(resultsDiv).toContainText('Nottingham');
+  await expect(resultsDiv).toContainText('London');
   await expect(resultsDiv).toContainText('1995-02-01');
   await expect(resultsDiv).toContainText('NG567HK'); 
   await expect(resultsDiv).toContainText('2031-06-01');
