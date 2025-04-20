@@ -203,7 +203,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await fillAndCheckError(page, '#colour','Red','#message-vehicle','Add vehicle')
   await expect(testCheckOwnerBtn).toBeDisabled(); 
   await expect(testNewOwnerBtn).toBeDisabled();
-  // enter incomplete owner name
+  // enter incomplete & all capitals owner name 
   await page.fill('#owner', 'rachel');
   await expect(testCheckOwnerBtn).toBeEnabled(); // check ownber button is enabled
   await expect(testNewOwnerBtn).toBeDisabled(); // new owner btn only enabled after check owner!
@@ -215,8 +215,8 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await addVehicleBtn.click();
   await expect(page.locator('#message-vehicle')).toContainText('Error'); // should be an error message, incomplete fields
 
-// fill back the owner field
-  await page.fill('#owner', 'rachel'); 
+// fill back the owner field EXCEPTION CHECKING for case sensitive owner name
+  await page.fill('#owner', 'RACHEL'); 
   await expect(testCheckOwnerBtn).toBeEnabled(); // check ownber button is enabled
   await expect(testNewOwnerBtn).toBeDisabled(); // new owner btn only enabled after check owner!
 
@@ -256,7 +256,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   // correct element id and message
   await expect(page.locator('#message-vehicle')).toContainText('Vehicle added successfully');
 
-  // exception checking 3 items
+  // EXCEPTION checking 3 items
   //  1. seeing if system prevents duplicate vehicles (same registration field)
     // 2. checking if case sensitive rego affects duplicate vehicles
       // 3. preventing 2 different owners from owning the same vehicle
@@ -264,7 +264,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await page.fill('#make', 'Toyota');
   await page.fill('#model', 'Corolla');
   await page.fill('#colour', 'Red');
-  await page.fill('#owner', 'Mark Smith');
+  await page.fill('#owner', 'MARK SMITH');
 
   await page.getByRole('button', { name: 'Add vehicle' }).click();
   await expect(page.locator('#message-vehicle')).toContainText('Error');
@@ -285,6 +285,43 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await expect(page.locator('#results').locator('div')).toHaveCount(1)
 })
 
+test('vehicle fields & owner fields reject numbers in invalid fields', async ({ page }) => {
+  const message_owner = page.locator('#message-owner');
+  const message = page.locator('#message');
+
+  await page.fill('#rego', 'BA987JE');
+  await page.fill('#make', 'Toyota');
+  await page.fill('#model', 'Corolla');
+  await page.fill('#colour', '123'); // colour as number
+  await page.fill('#owner', '123'); // owner name as number
+  await page.getByRole('button', { name: 'Add vehicle' }).click();
+  await expect(page.locator('#message-vehicle')).toContainText('Error');
+
+  await page.fill('#colour', 'Pink');
+  await page.fill('#owner', 'Adrian Green');
+
+  await page.getByRole('button', { name: 'Check owner' }).click();
+  await page.getByRole('button', { name: 'New owner' }).click();
+
+  await page.fill('#name', '123') // owner name as number
+  await page.fill('#address', 'Nottingham')
+  await page.fill('#dob', '1990-01-01')
+  await page.fill('#license', 'BA987JE')
+  await page.fill('#expire', '2030-01-01');
+
+  await page.getByRole('button', { name: 'Add owner' }).click();
+  await expect(message_owner).toContainText('Error');
+
+  // verifying that the vehicle was NOT added
+  await page.getByRole('link', { name: 'Vehicle search' }).click()
+  await page.waitForTimeout(1000); // IMPORTANT TO LET THE PAGE LOAD!!! at least wait a second
+
+  await page.locator('#rego').fill('BA987JE')
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(message).toContainText('No result found');
+});
+
+
 // helper function 
   // checks if button is disabled after entering input (note: the previous test did this manually)
 async function fillFieldAndExpectDisabled(page, fieldId, value, buttonLocator) {
@@ -292,7 +329,6 @@ async function fillFieldAndExpectDisabled(page, fieldId, value, buttonLocator) {
   await expect(buttonLocator).toBeDisabled();
   
 }
-
 test('correct new owner implementation', async ({ page }) => {
   // correct button name, and ensuring it is disabled as fields are empty
   const newOwnerBtn = page.getByRole('button', { name: 'New owner', exact: true });
@@ -323,12 +359,10 @@ test('correct new owner implementation', async ({ page }) => {
   await fillAndCheckError(page, '#dob', '1990-01-01', '#message-owner', 'Add owner');
   await fillAndCheckError(page, '#license', 'SD876ES', '#message-owner', 'Add owner');
   await page.fill('#expire', '2030-01-01'); // this is the last field, no more empty fields.
+
   // correct button name
   await page.getByRole('button', { name: 'Add owner' }).click();
-
-  // checking if add owner message appears
-  await expect(message).toBeVisible();
-  await expect(message).toContainText('Owner added successfully');
+  await expect(message).toContainText('Owner added successfully');// checking if add owner message appears
 
   await page.getByRole('link', { name: 'People search' }).click()
   await page.waitForTimeout(1000);
@@ -347,8 +381,7 @@ test('correct new owner implementation', async ({ page }) => {
 
   await expect(page.locator('#results').locator('div')).toHaveCount(1) // only one owner
 
-
-  // exception - checking if system accepts a duplicate owner 
+  // EXCEPTION - checking if system rejects a duplicate owner with ALL duplicate details
       // also checking if this is case sensitive for address and license
   await page.getByRole('link', { name: 'Add a vehicle' }).click()
   await page.waitForTimeout(1000);
@@ -368,9 +401,9 @@ test('correct new owner implementation', async ({ page }) => {
   await page.fill('#dob', '1990-01-01')
   await page.fill('#license', 'sd876es')
   await page.fill('#expire', '2030-01-01'); // this is the last field, no more empty fields.
+  
   // correct button name
   await page.getByRole('button', { name: 'Add owner' }).click();
-
   await expect(message).toContainText('Error');
 
     // search people to make sure there are no duplicates of kevin green with the same details!!
@@ -389,7 +422,50 @@ test('correct new owner implementation', async ({ page }) => {
 
   await expect(page.locator('#results').locator('div')).toHaveCount(1) // only one owner
 
+  // EXCEPTION 
+  // checking if system allow DUPLICATE 0WNER NAME with DIFFERENT DETAILS apart from car colour!
+  await page.getByRole('link', { name: 'Add a vehicle' }).click() //reload page
+  await page.waitForTimeout(1000);
+
+  await page.fill('#rego', 'NG567HK') // different data
+  await page.fill('#make', 'Ford') // different data
+  await page.fill('#model', 'Focus') // different data
+  await page.fill('#colour', 'Red') // the car colour is ALSO red! this should still be accepted
+  await page.fill('#owner', 'Kevin Green') // same owner name
+
+  await page.getByRole('button', { name: 'Check owner' }).click();
+  await page.getByRole('button', { name: 'New Owner' }).click();
+  
+  await page.fill('#name', 'Kevin Green') // same owner name
+  await page.fill('#address', 'Nottingham') // same location
+  await page.fill('#dob', '1995-02-01') // different DOB
+  await page.fill('#license', 'NG567HK') // different license
+  await page.fill('#expire', '2031-06-01'); // this is the last field, no more empty fields.
+  // correct button name
+  await page.getByRole('button', { name: 'Add owner' }).click();
+  await expect(message).toContainText('Owner added successfully');
+
+  await page.getByRole('link', { name: 'People search' }).click()
+  await page.waitForTimeout(1000);
+
+  //EXCEPTION checking for case sensitive/incomplete name searches (should find Kevin Green)
+  await page.locator('#name').fill('kev')
+  await page.getByRole('button', { name: 'Submit' }).click();
+
+  await expect(resultsDiv).toContainText('Kevin Green');
+  await expect(resultsDiv).toContainText('Nottingham');
+  await expect(resultsDiv).toContainText('1990-01-01');
+  await expect(resultsDiv).toContainText('SD876ES'); 
+  await expect(resultsDiv).toContainText('2030-01-01');
+
+  await expect(resultsDiv).toContainText('Kevin Green');
+  await expect(resultsDiv).toContainText('Nottingham');
+  await expect(resultsDiv).toContainText('1995-02-01');
+  await expect(resultsDiv).toContainText('NG567HK'); 
+  await expect(resultsDiv).toContainText('2031-06-01');
 });
+
+
 test('handle very long inputs in all fields', async ({ page }) => {
   const longString = 'A'.repeat(500); // 500-character string
   
