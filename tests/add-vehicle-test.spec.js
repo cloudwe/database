@@ -205,7 +205,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await expect(testNewOwnerBtn).toBeDisabled();
   // enter incomplete owner name
   await page.fill('#owner', 'rachel');
-  await expect(testCheckOwnerBtn).toBeDisabled(); // check ownber button is disabled, button hasnt been pressed
+  await expect(testCheckOwnerBtn).toBeEnabled(); // check ownber button is enabled
   await expect(testNewOwnerBtn).toBeDisabled(); // new owner btn only enabled after check owner!
 
 // EXCEPTION!! erase owner name
@@ -217,7 +217,7 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
 
 // fill back the owner field
   await page.fill('#owner', 'rachel'); 
-  await expect(testCheckOwnerBtn).toBeDisabled(); // check ownber button is enabled
+  await expect(testCheckOwnerBtn).toBeEnabled(); // check ownber button is enabled
   await expect(testNewOwnerBtn).toBeDisabled(); // new owner btn only enabled after check owner!
 
 // EXCEPTION! not expecting to add vehicle, there are existing owners with name rachel. 
@@ -250,7 +250,6 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
   await page.locator('div.owner-card:has-text("Rachel Smith")')
   .locator('button:has-text("Select owner")')
   .click();
-
   //correct button
   await page.getByRole('button', { name: 'Add vehicle' }).click();
 

@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = document.getElementById('name').value.trim();
         const address = document.getElementById('address').value.trim();
         const dob = document.getElementById('dob').value.trim();
-        const license = document.getElementById('license').value.trim();
+        const license = document.getElementById('license').value.trim().toUpperCase(); //all uppercase
         const expire = document.getElementById('expire').value.trim();
         
         // validate required fields
