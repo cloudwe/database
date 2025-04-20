@@ -247,11 +247,11 @@ test('correct: text input IDs, check owner & add-vehicle implementation', async 
     .toHaveCount(cardCount);
 
   // clicking the rachel smith one!
-  await page.locator('div.owner-card:has-text("Rachel Smith")')
-  .locator('button:has-text("Select owner")')
-  .click();
-  //correct button
-  await page.getByRole('button', { name: 'Add vehicle' }).click();
+  await page.locator('div.owner-card:has-text("Rachel Smith")').locator('button:has-text("Select owner")').click();
+
+
+
+  await page.getByRole('button', { name: 'Add vehicle' }).click();//correct button
 
   // correct element id and message
   await expect(page.locator('#message-vehicle')).toContainText('Vehicle added successfully');
@@ -355,9 +355,9 @@ test('correct new owner implementation', async ({ page }) => {
       // fields are still empty
         //adding new owner
   await fillAndCheckError(page, '#name', 'Kevin Green', '#message-owner', 'Add owner');
-  await fillAndCheckError(page, '#address', 'Nottingham', '#message-owner', 'Add owner');
+  await fillAndCheckError(page, '#address', 'London', '#message-owner', 'Add owner');
   await fillAndCheckError(page, '#dob', '1990-01-01', '#message-owner', 'Add owner');
-  await fillAndCheckError(page, '#license', 'SD876ES', '#message-owner', 'Add owner');
+  await fillAndCheckError(page, '#license', 'MK567NT', '#message-owner', 'Add owner');
   await page.fill('#expire', '2030-01-01'); // this is the last field, no more empty fields.
 
   // correct button name
@@ -374,9 +374,9 @@ test('correct new owner implementation', async ({ page }) => {
   const resultsDiv = page.locator('#results');
 
   await expect(resultsDiv).toContainText('Kevin Green'); 
-  await expect(resultsDiv).toContainText('Nottingham');
+  await expect(resultsDiv).toContainText('London');
   await expect(resultsDiv).toContainText('1990-01-01');
-  await expect(resultsDiv).toContainText('SD876ES'); 
+  await expect(resultsDiv).toContainText('MK567NT'); 
   await expect(resultsDiv).toContainText('2030-01-01');
 
   await expect(page.locator('#results').locator('div')).toHaveCount(1) // only one owner
@@ -397,9 +397,9 @@ test('correct new owner implementation', async ({ page }) => {
   await page.getByRole('button', { name: 'New Owner' }).click();
   
   await page.fill('#name', 'Kevin Green')
-  await page.fill('#address', 'nottingham')
+  await page.fill('#address', 'london')
   await page.fill('#dob', '1990-01-01')
-  await page.fill('#license', 'sd876es')
+  await page.fill('#license', 'mk567nt')
   await page.fill('#expire', '2030-01-01'); // this is the last field, no more empty fields.
   
   // correct button name
@@ -415,9 +415,9 @@ test('correct new owner implementation', async ({ page }) => {
   await page.getByRole('button', { name: 'Submit' }).click();
 
   await expect(resultsDiv).toContainText('Kevin Green');
-  await expect(resultsDiv).toContainText('Nottingham');
+  await expect(resultsDiv).toContainText('London');
   await expect(resultsDiv).toContainText('1990-01-01');
-  await expect(resultsDiv).toContainText('SD876ES'); 
+  await expect(resultsDiv).toContainText('MK567NT'); 
   await expect(resultsDiv).toContainText('2030-01-01');
 
   await expect(page.locator('#results').locator('div')).toHaveCount(1) // only one owner
@@ -437,7 +437,7 @@ test('correct new owner implementation', async ({ page }) => {
   await page.getByRole('button', { name: 'New Owner' }).click();
   
   await page.fill('#name', 'Kevin Green') // same owner name
-  await page.fill('#address', 'Nottingham') // same location
+  await page.fill('#address', 'London') // same location
   await page.fill('#dob', '1995-02-01') // different DOB
   await page.fill('#license', 'NG567HK') // different license
   await page.fill('#expire', '2031-06-01'); // this is the last field, no more empty fields.
@@ -453,9 +453,9 @@ test('correct new owner implementation', async ({ page }) => {
   await page.getByRole('button', { name: 'Submit' }).click();
 
   await expect(resultsDiv).toContainText('Kevin Green');
-  await expect(resultsDiv).toContainText('Nottingham');
+  await expect(resultsDiv).toContainText('London');
   await expect(resultsDiv).toContainText('1990-01-01');
-  await expect(resultsDiv).toContainText('SD876ES'); 
+  await expect(resultsDiv).toContainText('MK567NT'); 
   await expect(resultsDiv).toContainText('2030-01-01');
 
   await expect(resultsDiv).toContainText('Kevin Green');
